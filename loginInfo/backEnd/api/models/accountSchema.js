@@ -1,5 +1,5 @@
 let mongoose= require('mongoose');
-let validator = require('validator');
+let validator = require('validator');/*look in to this section*/
 const bcrypt = require('bcrypt');
 
 
@@ -13,7 +13,8 @@ let accountSchema = new mongoose.Schema({
   username:{
     type:String,
     required: true,
-    unique: true
+    unique: true,
+    trim:true
     },
 
   password:{
@@ -42,13 +43,13 @@ accountSchema.statics.authenticate = function(Email,password, callback){
     .exec(function(err, user){
       if(err){
         return callback(err)
-      }else if (!user){
+      }else if (!acount){
          var err = new Error('User not found.');
          err.status = 401;
-         return callback(err)
+         return callback(err);
       }
 
-      bcrypt.compare(password, user.password, function(err, result){
+      bcrypt.compare(password, account.password, function(err, result){
         if(result==true){
           return callback(null, user);
         }else{
@@ -58,19 +59,18 @@ accountSchema.statics.authenticate = function(Email,password, callback){
     });
 }
 
-
 //hashing a password before saving it to the database
 
 accountSchema.pre('save', function(next){
   var user =this;
-  bcrypt.hash(user.password, 10,function(err,hash){
+  bcrypt.hash(account.password, 10,function(err,hash){
     if(err){
       return next(err);
     }
-    user.password= hash;
+    account.password= hash;
     next();
   })
 });
 
-var account = mongoose.modal('accounts', accountSchema)
+var account = mongoose.modal('accounts', accountSchema);
 module.exports = account;
