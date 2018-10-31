@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 
 
 let accountSchema = new mongoose.Schema({
-  Email:{
+  email:{
     type:String,
     required:true,
     unique:true
@@ -20,15 +20,18 @@ let accountSchema = new mongoose.Schema({
 
     type:String,
     required: true
-    }
+  },
 
+    passwordConfirmation:{
+      type:String,
+      required:true
+    }
 
 });
 
-
 //this part authenticate input against database
 
-accountSchema.statics.authenticate = function(Email,password, collback){
+accountSchema.statics.authenticate = function(Email,password, callback){
   /*
     1. Authenticate the user
 
