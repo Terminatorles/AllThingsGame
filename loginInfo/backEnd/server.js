@@ -20,5 +20,32 @@ db.once('open', function(){
 //use sessions for tracking logins
 app.use(session({
   secrect: 'work',
-  resave
-})
+  resave: true,
+  saveUninitialized: false.
+  store: new MongoStore({
+    mongooseConnection: db
+  })
+}));
+
+// parse incoming requests
+app. use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false}));
+
+//serve static files from template
+app.use(express.static(_dirnam + '/tamplateLogReg'));
+
+//include routes
+var routes = require('./routes/router');
+app.use('/', routes);
+
+
+//catch 404 and forward to error handler
+app.use(function(err, req, res, next){
+  res.status(err, req, res, next);
+  res.send(err, message);
+});
+
+//listen on part 6000
+app.listen(6000, function(){
+  console.log('Express app listening on port 6000');
+});
