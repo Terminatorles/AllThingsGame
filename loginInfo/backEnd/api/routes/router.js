@@ -1,16 +1,15 @@
-var express =require('express');
-var router  =express.router();
-var Account =require('../models/accountSchema');
+var express = require('express');
+var router  = express.router();
+var Account = require('../models/accountSchema');
 
 //get route for reading data
 
 router.get('/', function(req, res, next){
-  return re.sendFile(path.join(_dirname +/frontEnd/loginPage.html))
+  return res.sendFile(path.join(__dirname + '/frontEnd/loginPage.html'))
 });
 
 
 //post route for reading data
-
 router.post('/', function(req, res, next){
   //confirm that user typed same passsword twice
   if (req.body.password != req.body.passwordConfirmation){
@@ -19,15 +18,18 @@ router.post('/', function(req, res, next){
       res.send("passwords don't Match");
       return next(err);
     }
-    if (req.body.email && req.body.username && req.body.password && req.body.passwordconfirmation){
+    if (req.body.email &&
+       req.body.username &&
+       req.body.password &&
+       req.body.passwordconfirmation){
 
       var userData ={
           email: req.body.email,
           username:req.body.username,
           password:req.body.password,
-          passwordConfirmation:req.body.passwordConfirmation,
-
+          passwordConfirmation:req.body.passwordConfirmation
         }
+
         //using the Schema one will insert data into the database
         Account.create(userData, function(err, account){
           if(err){
@@ -41,18 +43,18 @@ router.post('/', function(req, res, next){
         Accont.authenticate(req.body.logemail, req.body.logpassword, function(error, user){
           if (error || !account){
 
-            var err = new Error('qoring email or password.');
+            var err = new Error('wrong email or password.');
             err.status = 401;
             return next(err);
           } else{
             req.session.accountId= account._id;
             return res.redirect('/profile');
           }
-        });
+        })
 
 
       } else{
-        var err= new Error('all fields required');
+        var err = new Error('all fields required');
         err.status= 400;
         return next(err);
       }
@@ -67,13 +69,14 @@ router.get('/profile', function(req, res, next){
     if(error){
       return next(error);
     } else {
-      if (account ===null){
+      if (account === null){
         var err = new Error('Not authorized! go back!');
         err.status = 400;
         return next(err);
       }else{
-        return res.send('<h1>Name: </h1>' + account.username + '<h2>Mail: </h2>' + account.email + '<br><a type= button" href="/logout")
+        return res.send('<h1>Name: </h1>' + account.username + '<h2>Mail: </h2>' + account.email + '<br><a type= button" href="/logout"')
       }
+    }
     });
 });
 
@@ -92,6 +95,5 @@ router.get('/logout', function(req, res next){
     });
   }
 });
-
 
 module.exports = router;

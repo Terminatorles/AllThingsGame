@@ -3,7 +3,7 @@ let validator = require('validator');/*look in to this section*/
 const bcrypt = require('bcrypt');
 
 
-let accountSchema = new mongoose.Schema({
+let AccountSchema = new mongoose.Schema({
   email:{
     type:String,
     required:true,
@@ -31,27 +31,25 @@ let accountSchema = new mongoose.Schema({
 });
 
 //this part authenticate input against database
-
-accountSchema.statics.authenticate = function(Email,password, callback){
+AccountSchema.statics.authenticate = function(email,password, callback){
   /*
     1. Authenticate the user
 
       1. check if the user exists
       2.check if password is correct
   */
-  account.findOne({})
-    .exec(function(err, user){
+  Account.findOne({})
+    .exec(function(err, account){
       if(err){
         return callback(err)
-      }else if (!acount){
+      }else if (!account){
          var err = new Error('User not found.');
          err.status = 401;
          return callback(err);
       }
-
       bcrypt.compare(password, account.password, function(err, result){
         if(result==true){
-          return callback(null, user);
+          return callback(null, account);
         }else{
           return callback();
         }
@@ -60,8 +58,7 @@ accountSchema.statics.authenticate = function(Email,password, callback){
 }
 
 //hashing a password before saving it to the database
-
-accountSchema.pre('save', function(next){
+AccountSchema.pre('save', function(next){
   var user =this;
   bcrypt.hash(account.password, 10,function(err,hash){
     if(err){
@@ -72,5 +69,5 @@ accountSchema.pre('save', function(next){
   })
 });
 
-var account = mongoose.modal('accounts', accountSchema);
-module.exports = account;
+var Account = mongoose.modal('accounts', AccountSchema);
+module.exports = Account;
